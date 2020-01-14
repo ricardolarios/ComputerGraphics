@@ -9,12 +9,17 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
-- Did you collaborate with any other students/TAs/Professors?
+	3-4, most of it was just troubleshooting the issues with setting up the 
+- Did you collaborate with any other students/TAs/Professors? 
+	Erik (Prof. Anderson? Don't remember which he preferred) in class 1.
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
-- (Optional) What was your favorite part of the lab?
+  - N/A
+- (Optional) What was your favorite part of the lab? 
+	Actually getting the red screen to pop up!
 - (Optional) How would you improve the lab?
+	Not much, it's kind of hard to make a setup lab better improved.
+
+Note: (build folders will contain the build information/VS sln file/etc. from CMake)
 
 ## Logistics
 
