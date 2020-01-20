@@ -47,6 +47,16 @@ struct Vec2{
         result.y = this->y * a;
         return result;
     }
+
+    bool has_smaller_x(const Vec2 a) const
+    {
+        return this->x < a.x;
+    }
+
+    bool has_smaller_y(const Vec2 a) const
+    {
+        return this->y < a.y;
+    }
 };
 
 

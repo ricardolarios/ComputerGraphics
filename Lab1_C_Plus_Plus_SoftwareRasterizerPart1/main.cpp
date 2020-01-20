@@ -8,7 +8,7 @@
  *
  *  Compile on the terminal with: 
  *
- *  clang++ -std=c++11 main.cpp -o main
+ *  g++ -std=c++11 main.cpp -o main
  *
  *  @author Mike Shah
  *  @bug No known bugs.
@@ -16,6 +16,7 @@
 
 // Load our libraries
 #include <iostream>
+#include<bits/stdc++.h> 
 
 // Some define values
 #define WINDOW_HEIGHT 320
@@ -50,6 +51,10 @@ void drawLine(Vec2 v0, Vec2 v1, TGA& image, ColorRGB c){
         std::swap(v0.x, v1.x);
         std::swap(v0.y, v1.y);
     }
+    /*
+    std::cout << "Vector1: " << v0.x << ", " << v0.y << '\n';
+    std::cout << "Vector2: " << v1.x << ", " << v1.y << '\n';
+    */
     for(int x = v0.x; x <= v1.x; ++x){
         float t = (x-v0.x)/(float)(v1.x-v0.x);
         int y = v0.y*(1.0f-t) + v1.y*t;
@@ -61,6 +66,53 @@ void drawLine(Vec2 v0, Vec2 v1, TGA& image, ColorRGB c){
     }
 }
 
+int compareY(Vec2 first, Vec2 second)
+{
+    return first.y - second.y;
+}
+
+void fillBottomFlatTriangle(Vec2 v0, Vec2 v1, Vec2 v2, TGA& image, ColorRGB c)
+{
+    float invslope1 = ((float)v1.x - (float)v0.x) / ((float)v1.y - (float)v0.y);
+    float invslope2 = ((float)v2.x - (float)v0.x) / ((float)v2.y - (float)v0.y);
+
+    float curx1 = v0.x;
+    float curx2 = v0.x;
+
+    for (int scanlineY = v0.y; scanlineY <= v1.y; scanlineY++)
+    {
+        Vec2* draw_vec_1 = new Vec2(curx1, scanlineY);
+        Vec2* draw_vec_2 = new Vec2(curx2, scanlineY);
+
+        drawLine(*draw_vec_1, *draw_vec_2, image, c);
+        curx1 += invslope1;
+        curx2 += invslope2;
+        delete draw_vec_1;
+        delete draw_vec_2;
+    }
+}
+
+void fillTopFlatTriangle(Vec2 v0, Vec2 v1, Vec2 v2, TGA& image, ColorRGB c)
+{
+    float invslope1 = ((float)v2.x - (float)v0.x) / ((float)v2.y - (float)v0.y);
+    float invslope2 = ((float)v2.x - (float)v1.x) / ((float)v2.y - (float)v1.y);
+
+    float curx1 = v2.x;
+    float curx2 = v2.x;
+
+    for (int scanlineY = v2.y; scanlineY > v0.y; scanlineY--)
+    {
+        Vec2* draw_vec_1 = new Vec2(curx1, scanlineY);
+        Vec2* draw_vec_2 = new Vec2(curx2, scanlineY);
+
+        drawLine(*draw_vec_1, *draw_vec_2, image, c);
+        curx1 -= invslope1;
+        curx2 -= invslope2;
+        delete draw_vec_1;
+        delete draw_vec_2;
+    }
+}
+
 // Draw a triangle
 void triangle(Vec2 v0, Vec2 v1, Vec2 v2,TGA& image, ColorRGB c){
     if(glFillMode==LINE){
@@ -69,6 +121,43 @@ void triangle(Vec2 v0, Vec2 v1, Vec2 v2,TGA& image, ColorRGB c){
         drawLine(v2,v0,image,c);
     }
     // TODO: Draw a filled triangle
+    else
+    {
+        Vec2 vectors[3] = { v0, v1, v2 };
+        
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = i + 1; j < 3; j++)
+            {
+                if (vectors[j].has_smaller_y(vectors[i]))
+                {
+                    Vec2 temp = vectors[i];
+                    vectors[i] = vectors[j];
+                    vectors[j] = temp;
+                }
+            }
+        }
+        
+        if (vectors[1].y == vectors[2].y)
+        {
+            fillBottomFlatTriangle(vectors[0], vectors[1], vectors[2], image, c);
+        }
+        else if (vectors[0].y == vectors[1].y)
+        {
+            fillTopFlatTriangle(vectors[0], vectors[1], vectors[2], image, c);
+        }
+        else
+        {
+            Vec2* v3 = new Vec2(
+                (int)(vectors[0].x + ((float)(vectors[1].y - vectors[0].y) / (float)(vectors[2].y - vectors[0].y)) * (vectors[2].x - vectors[0].x)), vectors[1].y);
+
+            fillBottomFlatTriangle(vectors[0], vectors[1], *v3, image, c);
+            fillTopFlatTriangle(vectors[1], *v3, vectors[2], image, c);
+        }
+
+
+       // Algorithm shit
+    }
 }
 
 
