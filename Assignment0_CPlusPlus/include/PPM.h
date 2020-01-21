@@ -3,7 +3,7 @@
  *  
  *  Class for working with P3 PPM images specifically.
  *
- *  @author your_name_here
+ *  @author Rikki Larios
  *  @bug No known bugs.
  */
 #ifndef PPM_H
