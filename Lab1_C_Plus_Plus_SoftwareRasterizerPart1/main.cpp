@@ -120,7 +120,6 @@ void triangle(Vec2 v0, Vec2 v1, Vec2 v2,TGA& image, ColorRGB c){
         drawLine(v1,v2,image,c);
         drawLine(v2,v0,image,c);
     }
-    // TODO: Draw a filled triangle
     else
     {
         Vec2 vectors[3] = { v0, v1, v2 };
@@ -154,13 +153,8 @@ void triangle(Vec2 v0, Vec2 v1, Vec2 v2,TGA& image, ColorRGB c){
             fillBottomFlatTriangle(vectors[0], vectors[1], *v3, image, c);
             fillTopFlatTriangle(vectors[1], *v3, vectors[2], image, c);
         }
-
-
-       // Algorithm shit
     }
 }
-
-
 
 // Main
 int main(){
