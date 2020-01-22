@@ -184,6 +184,9 @@ int main(){
 
     // Draw a triangle
     triangle(tri[0],tri[1],tri[2],canvas,red);
+    triangle(Vec2(300, 60), Vec2(290, 10), Vec2(60, 100), canvas, red);
+    triangle(Vec2(200, 200), Vec2(290, 150), Vec2(140, 170), canvas, red);
+
 
     // Output the final image
     canvas.outputTGAImage("graphics_lab2.ppm");
