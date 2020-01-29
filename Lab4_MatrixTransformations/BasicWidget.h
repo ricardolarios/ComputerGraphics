@@ -19,7 +19,9 @@ protected:
   QColor backgroundColor_;
   ScanBuffer buffer_;
   qint64 prevTicks_;
+  float xAxisRotation_;
   float yAxisRotation_;
+  float zAxisRotation_;
   Matrix4f translation_;
   Matrix4f rotation_;
   Matrix4f transform_;

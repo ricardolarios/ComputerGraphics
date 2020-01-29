@@ -3,7 +3,9 @@
 BasicWidget::BasicWidget(QWidget* parent) : QWidget(parent), buffer_(800, 600), minYVert_(-1, -1, 0), midYVert_(0, 1, 0), maxYVert_(1, -1, 0)
 {
   prevTicks_ = QDateTime::currentMSecsSinceEpoch();
+  xAxisRotation_ = 0.0f;
   yAxisRotation_ = 0.0f;
+  zAxisRotation_ = 0.0f;
   projection_.InitPerspective(90.0f, 800./600., 0.1f, 1000.0f);
 }
 
@@ -24,7 +26,9 @@ void BasicWidget::paintEvent(QPaintEvent* event)
   qint64 curTicks = QDateTime::currentMSecsSinceEpoch();
   float delta = (float)((curTicks - prevTicks_) / 1000.0);
 
+  xAxisRotation_ += delta;
   yAxisRotation_ += delta;
+  zAxisRotation_ += delta;
 
   // We have some transformations now.  Construct them
   translation_.InitTranslation(0.0, 0.0, 3.0);
