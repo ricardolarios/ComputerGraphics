@@ -6,13 +6,11 @@
 
 *TODO*: Please edit the following information in your assignment
 
-* Name and partners name (At most 1 partner for this assignment): 
-* How many hours did it take you to complete this assignment? 
-* Did you collaborate or share ideas with any other students/TAs/Professors? 
+* Name and partners name (At most 1 partner for this assignment): Rikki Larios
+* How many hours did it take you to complete this assignment? around 6-8 hours probably
+* Did you collaborate or share ideas with any other students/TAs/Professors? No
 * Did you use any external resources? 
-  * (tbd if any)
-  * (tbd if any)
-  * (tbd if any)
+  * https://en.wikipedia.org/wiki/Cross_product
 * (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
 
 ## Logistics

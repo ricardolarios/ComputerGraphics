@@ -152,6 +152,11 @@ inline Vector4f operator -(const Vector4f& a, const Vector4f& b){
     return vec;
 }
 
+inline bool operator ==(const Vector4f& a, const Vector4f& b)
+{
+    return (a.x == b.x) && (a.y == b.y) && (a.z == b.z) && (a.w == b.w);
+}
+
 // Vector Projection
 // Note: This is the vector projection of 'a' onto 'b'
 inline Vector4f Project(const Vector4f& a, const Vector4f& b){
@@ -180,6 +185,7 @@ inline Vector4f Normalize(const Vector4f& v){
 inline Vector4f CrossProduct(const Vector4f& a, const Vector4f& b){
     // TODO:
     // Following the calculation using the determinant of the i, j, k matrix.
+    // https://en.wikipedia.org/wiki/Cross_product in the Computing, Matrix Notation section.
     float new_x = a.y * b.z - a.z * b.y;
     float new_y = -(a.x * b.z - a.z * b.x);
     float new_z = a.x * b.y - b.x * a.y;

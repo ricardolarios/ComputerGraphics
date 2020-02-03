@@ -111,8 +111,8 @@ bool unitTest3(){
 	Vector4f b(0.0f,1.0f,0,0);
 	Vector4f c(0,0,1.0f,0);
 	Vector4f d(0,0,0,1.0f);
-	Matrix4f myScaled(a,b,c,d);
-    myScaled.MakeScale(2.0f,2.0f,2.0f);
+	Matrix4f start(a,b,c,d);
+    Matrix4f myScaled = start.MakeScale(2.0f,2.0f,2.0f);
 
     if(
         glmScale[0][0]==myScaled[0][0] &&
@@ -174,6 +174,36 @@ bool unitTest5(){
     return false;
 }
 
+// Cross product of parallel vectors should be the 0 vector.
+bool test_cross_product_parallel()
+{
+    Vector4f a(2, 3, 4, 0);
+    Vector4f a_parallel(-2, -3, -4, 0);
+    Vector4f expected(0, 0, 0, 1);
+
+    if (CrossProduct(a, a_parallel) == expected)
+    {
+        return true;
+    }
+    
+    return false;
+}
+
+// Cross product of parallel vectors should be the 0 vector.
+bool test_cross_product()
+{
+    Vector4f a(2, 3, 4, 0);
+    Vector4f b(1, 5, -2, 0);
+    Vector4f expected(-26, 8, 7, 1);
+
+    if (CrossProduct(a, b) == expected)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 int main(){
     // Keep track of the tests passed
     unsigned int testsPassed = 0;
@@ -185,6 +215,8 @@ int main(){
     std::cout << "Passed 3: " << unitTest3() << " \n";
     std::cout << "Passed 4: " << unitTest4() << " \n";
     std::cout << "Passed 5: " << unitTest5() << " \n";
+    std::cout << "Passed Cross product: " << test_cross_product_parallel() << " \n";
+    std::cout << "Passed Cross product: " << test_cross_product() << " \n";
 
     return 0;
 }

@@ -112,12 +112,14 @@ public:
 
     // Multiplies the first row (00, 01, 02, 03) by x, second by y, third by z.
     Matrix4f MakeScale(float sx,float sy, float sz){
-        // TODO:
-        n[0][0] *= sx; n[0][1] *= sx; n[0][2] *= sx; 
-        n[1][0] *= sy; n[1][1] *= sy; n[1][2] *= sy; 
-        n[2][0] *= sz; n[2][1] *= sz; n[2][2] *= sz;
+        Matrix4f scale(
+            sx, 0, 0, 0,
+            0, sy, 0, 0,
+            0, 0, sz, 0,
+            0, 0, 0, 1);
 
-        return(*this); // You will need to modify this.
+        Matrix4f result = *this * scale;
+        return result; // You will need to modify this.
                             // When you test, test against glm_gtx_transform
     }
 
