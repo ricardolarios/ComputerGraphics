@@ -110,7 +110,6 @@ public:
                             // When you test, test against glm_gtx_transform
     }
 
-    // Multiplies the first row (00, 01, 02, 03) by x, second by y, third by z.
     Matrix4f MakeScale(float sx,float sy, float sz){
         Matrix4f scale(
             sx, 0, 0, 0,

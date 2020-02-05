@@ -215,7 +215,7 @@ int main(){
     std::cout << "Passed 3: " << unitTest3() << " \n";
     std::cout << "Passed 4: " << unitTest4() << " \n";
     std::cout << "Passed 5: " << unitTest5() << " \n";
-    std::cout << "Passed Cross product: " << test_cross_product_parallel() << " \n";
+    std::cout << "Passed Cross product parallel: " << test_cross_product_parallel() << " \n";
     std::cout << "Passed Cross product: " << test_cross_product() << " \n";
 
     return 0;
