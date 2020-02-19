@@ -19,6 +19,7 @@ set(srcs
   BasicWidget.cpp
   Application.cpp
   main.cpp
+  ObjFileParser.cpp
 )
 
 add_executable(Assignment
