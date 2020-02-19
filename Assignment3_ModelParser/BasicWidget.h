@@ -7,6 +7,8 @@
 
 /**
  * This is just a basic OpenGL widget that will allow a change of background color.
+ *
+ * Removed the buffers from this widget and instead put that responsibility on the parser objects.
  */
 class BasicWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -16,8 +18,6 @@ private:
     QString vertexShaderString() const;
     QString fragmentShaderString() const;
     void createShader();
-    QOpenGLVertexArrayObject vao_;
-    QOpenGLVertexArrayObject vao_m_;
     ObjFileParser* curr_obj_;
     // Map of file names to the ObjFileParser that parsed that file. Allows reuse without reading file again.
     //std::map<const char*, ObjFileParser*> possible_obj_;
@@ -36,15 +36,6 @@ protected:
     void resizeGL(int w, int h) override;
     void paintGL() override;
 
-    QOpenGLBuffer vbo_;
-    QOpenGLBuffer nbo_; // for normals
-    QOpenGLBuffer ibo_;
-    QOpenGLBuffer nibo_; // normal indices buffer
-    QOpenGLBuffer vbo_m_;
-    QOpenGLBuffer nbo_m_; // for normals
-    QOpenGLBuffer ibo_m_;
-    QOpenGLBuffer nibo_m_; // normal indices buffer
-    //QOpenGLBuffer cbo_; // unused, using vbo_
     QOpenGLShaderProgram shaderProgram_;
 
 public:

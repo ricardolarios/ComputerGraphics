@@ -4,14 +4,6 @@
 
 //////////////////// Helpers /////////////////////
 
-void pl(std::string s)
-{
-	std::cout << s << std::endl;
-}
-void pl(float s)
-{
-	std::cout << s << std::endl;
-}
 // Trims the whitespace from the left side of a string
 std::string ltrim(const std::string& string)
 {
@@ -28,7 +20,7 @@ std::string get_next_string_by_delimiter(const std::string& string, size_t start
 
 ///////////////////// ObjFileParser methods ///////////////////////
 
-////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 // PRIVATE
 
 void ObjFileParser::parse_file(std::string filepath)
@@ -45,11 +37,8 @@ void ObjFileParser::parse_file(std::string filepath)
 
 	if (ifile.is_open())
 	{
-		std::cout << "Starting!" << std::endl;
-
 		while (std::getline(ifile, cur_line))
 		{
-			//std::cout << cur_line << std::endl;
 			std::string trimmed_line = ltrim(cur_line);
 			std::string first_word = get_next_string_by_delimiter(trimmed_line);
 
@@ -69,7 +58,7 @@ void ObjFileParser::parse_file(std::string filepath)
 					current_index = 0; // reset index
 				}
 
-				// Add color data at the end. I'll just set all colors to red.
+				// Add color data at the end. I'll just set all colors to white for this assignment.
 				temp_vertices.push_back(1.0f);
 				temp_vertices.push_back(1.0f);
 				temp_vertices.push_back(1.0f);
@@ -91,7 +80,6 @@ void ObjFileParser::parse_file(std::string filepath)
 			}
 			else if (first_word == "f")
 			{
-				// TODO: Potentially change this to parse any number of `n//n//n//...`
 				// parse as face line
 				size_t current_index = first_word.size();
 				trimmed_line = trimmed_line.substr(first_word.size()); // remove string so we can check string properly.
@@ -126,8 +114,6 @@ void ObjFileParser::parse_file(std::string filepath)
 
 	}
 
-	std::cout << "done!" << std::endl;
-
 	// Now set everything from the temp vectors to the GLfloat* and GLuint*
 	this->set_vertices(temp_vertices);
 	this->set_normals(temp_normals);
@@ -140,24 +126,18 @@ void ObjFileParser::parse_file(std::string filepath)
 void ObjFileParser::setup_buffers()
 {
 	if (this->has_setup_buffers_) return;
+
 	// vbo will store vertex and color info.
 	vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	std::cout << "here" << std::endl;
 	vbo_.create();
-	std::cout << "after create" << std::endl;
-
-	// Bind our vbo inside our vao
 	vbo_.bind();
 	vbo_.allocate(this->vertices_, this->vertices_length_ * sizeof(GL_FLOAT));
-	std::cout << "after bind, allocate vbo" << std::endl;
-
 
 	nbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	nbo_.create();
 	nbo_.bind();
 	nbo_.allocate(this->normals_, this->normals_length_ * sizeof(GL_FLOAT));
 
-	// TODO:  Generate our index buffers
 	ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	ibo_.create();
 	ibo_.bind();
@@ -170,6 +150,9 @@ void ObjFileParser::setup_buffers()
 
 	this->has_setup_buffers_ = true;
 }
+
+/////////////
+// Setters
 
 void ObjFileParser::set_vertices(std::vector<float> v)
 {
@@ -226,8 +209,20 @@ void ObjFileParser::set_n_indices(std::vector<unsigned int> n_idx)
 ////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-ObjFileParser::ObjFileParser()
+ObjFileParser::ObjFileParser() : vbo_(QOpenGLBuffer::VertexBuffer), nbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), nibo_(QOpenGLBuffer::IndexBuffer)
 {
+	this->filepath_ = "";
+	this->has_setup_buffers_ = false;
+
+	this->vertices_ = nullptr;
+	this->normals_ = nullptr;
+	this->vertices_idx_ = nullptr;
+	this->normals_idx_ = nullptr;
+
+	this->vertices_length_ = 0;
+	this->normals_length_ = 0;
+	this->vertices_idx_length_ = 0;
+	this->normals_idx_length_ = 0;
 }
 
 ObjFileParser::ObjFileParser(std::string filepath) : vbo_(QOpenGLBuffer::VertexBuffer), nbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), nibo_(QOpenGLBuffer::IndexBuffer)
@@ -235,7 +230,6 @@ ObjFileParser::ObjFileParser(std::string filepath) : vbo_(QOpenGLBuffer::VertexB
 	this->parse_file(filepath);
 	this->filepath_ = filepath;
 	this->has_setup_buffers_ = false;
-	//this->setup_buffers();
 }
 
 ObjFileParser::~ObjFileParser()
@@ -258,74 +252,6 @@ ObjFileParser::~ObjFileParser()
 	this->vao_.destroy();
 }
 
-//std::vector<float> ObjFileParser::get_vertices()
-//{
-//	return this->vertices_;
-//}
-//
-//std::vector<float> ObjFileParser::get_normals()
-//{
-//	return this->normals_;
-//}
-/*
-GLfloat* ObjFileParser::get_vertices()
-{
-	if (this->vertices_gl_ == nullptr)
-	{
-		this->vertices_gl_ = new GLfloat[this->vertices_.size()];
-		
-		for (size_t i = 0; i < this->vertices_.size(); i++)
-		{
-			this->vertices_gl_[i] = this->vertices_[i];
-		}
-	}
-	return this->vertices_gl_;
-}
-
-GLfloat* ObjFileParser::get_normals()
-{
-	if (this->normals_gl_ == nullptr)
-	{
-		this->normals_gl_ = new GLfloat[this->normals_.size()];
-
-		for (size_t i = 0; i < this->normals_.size(); i++)
-		{
-			this->normals_gl_[i] = this->normals_[i];
-		}
-	}
-	return this->normals_gl_;
-}
-*/
-
-//std::vector<unsigned int> ObjFileParser::get_v_indices()
-//{
-//	return this->v_indices_;
-//}
-//
-//std::vector<unsigned int> ObjFileParser::get_n_indices()
-//{
-//	return this->n_indices_;
-//}
-//
-//
-//
-//GLfloat* ObjFileParser::get_verts_gl()
-//{
-//	return this->vertices_;
-//}
-//
-//GLfloat* ObjFileParser::get_norms_gl()
-//{
-//	return this->normals_;
-//}
-//GLuint* ObjFileParser::get_v_idx_gl()
-//{
-//	return this->vertices_idx_;
-//}
-//GLuint* ObjFileParser::get_n_idx_gl()
-//{
-//	return this->normals_idx_;
-//}
 size_t ObjFileParser::vertices_length()
 {
 	return this->vertices_length_;

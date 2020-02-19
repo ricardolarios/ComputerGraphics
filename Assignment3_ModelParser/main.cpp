@@ -8,13 +8,10 @@
 
 // Lab application
 #include "Application.h"
+
 #include "ObjFileParser.h"
 
-
-
 int main(int argc, char** argv) {
-    //ObjFileParser* o2 = new ObjFileParser("../objects/bunny.obj");
-    //qDebug() << "length in main: " << test->vertices_length();
     QApplication a(argc, argv);
     QString appDir = a.applicationDirPath();
     QDir::setCurrent(appDir);
