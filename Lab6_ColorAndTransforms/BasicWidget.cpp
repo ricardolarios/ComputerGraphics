@@ -2,7 +2,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // Publics
-BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), cbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
+BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
 {
   setFocusPolicy(Qt::StrongFocus);
 }
@@ -12,8 +12,10 @@ BasicWidget::~BasicWidget()
   vbo_.release();
   vbo_.destroy();
   // TODO: Remove the CBO
+  /*
   cbo_.release();
   cbo_.destroy();
+  */
   // End TODO
   ibo_.release();
   ibo_.destroy();
@@ -39,7 +41,7 @@ QString BasicWidget::vertexShaderString() const
     "void main()\n"
     "{\n"
     // TODO: gl_Position must be updated!
-    "  gl_Position = vec4(position, 1.0);\n"
+    "  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);\n"
     // END TODO
     "  vertColor = color;\n"
     "}\n";
@@ -139,6 +141,14 @@ void BasicWidget::initializeGL()
       0.0f, 1.0f, 0.0f, 1.0f, // green
       0.0f, 0.0f, 1.0f, 1.0f // blue
   };
+
+  static const GLfloat verts_colors[21] =
+  {
+      0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Center vertex + red
+      1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top right vertex + green
+      -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f // Top left vertex + blue
+  }; 
+
   // Define our indices
   static const GLuint idx[3] =
   {
@@ -153,14 +163,16 @@ void BasicWidget::initializeGL()
   vbo_.create();
   vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   vbo_.bind();
-  vbo_.allocate(verts, 3 * 3 * sizeof(GL_FLOAT));
+  vbo_.allocate(verts_colors, 3 * 7 * sizeof(GL_FLOAT)); // 3 vertices * 3 floats per vertex and 4 color values per vertex
   // END TODO
   
   // TODO:  Remove the cbo_
+  /*
   cbo_.create();
   cbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   cbo_.bind();
   cbo_.allocate(colors, 3 * 4 * sizeof(GL_FLOAT));
+  */
   // END TODO
 
   // TODO:  Generate our index buffer
@@ -178,10 +190,10 @@ void BasicWidget::initializeGL()
   // Note:  Remember that Offset and Stride are expressed in terms
   //        of bytes!
   shaderProgram_.enableAttributeArray(0);
-  shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3);
-  cbo_.bind();
+  shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3, 7 * sizeof(GL_FLOAT)); // Stride is 7 because 3 verts, 4 colors
+  //cbo_.bind();
   shaderProgram_.enableAttributeArray(1);
-  shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 0, 4);
+  shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GL_FLOAT), 4, 7 * sizeof(GL_FLOAT));
   // END TODO
 
   ibo_.bind();
@@ -196,6 +208,17 @@ void BasicWidget::resizeGL(int w, int h)
 {
   glViewport(0, 0, w, h);
   // TODO:  Set up the model, view, and projection matrices
+  shaderProgram_.bind();
+
+  model_.setToIdentity();
+  view_.lookAt(QVector3D(0, 0, 10), QVector3D(0, 0, 0), QVector3D(0, -1, 0));
+  projection_.perspective(70.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+  shaderProgram_.setUniformValue("modelMatrix", model_);
+  shaderProgram_.setUniformValue("viewMatrix", view_);
+  shaderProgram_.setUniformValue("projectionMatrix", projection_);
+
+  shaderProgram_.release();
   // END TODO
 }
 

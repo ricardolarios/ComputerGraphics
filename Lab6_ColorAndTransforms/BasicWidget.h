@@ -33,7 +33,7 @@ protected:
   QOpenGLBuffer vbo_;
   QOpenGLBuffer ibo_;
   // TODO:  Remove the cbo_!
-  QOpenGLBuffer cbo_;
+  //QOpenGLBuffer cbo_;
   // END TODO
   QOpenGLShaderProgram shaderProgram_;
   QOpenGLDebugLogger logger_;
