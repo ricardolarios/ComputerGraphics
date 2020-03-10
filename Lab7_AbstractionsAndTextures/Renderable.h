@@ -28,6 +28,9 @@ protected:
 	float rotationSpeed_;
 	float rotationAngle_;
 
+	// Origin of this renderable, determines where to render object.
+	QVector3D origin_;
+
 	// Create our shader and fix it up
 	void createShaders();
 
@@ -46,6 +49,7 @@ public:
 	void setModelMatrix(const QMatrix4x4& transform);
 	void setRotationAxis(const QVector3D& axis);
 	void setRotationSpeed(float speed);
+	void setOrigin(const QVector3D& origin); // Set origin, initially (0,0,0)
 
 private:
 

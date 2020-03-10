@@ -3,7 +3,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 0.0, 1.0), rotationSpeed_(0.25)
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 0.0, 1.0), rotationSpeed_(0.25), origin_(QVector3D(0,0,0))
 {
 	rotationAngle_ = 0.0;
 }
@@ -53,8 +53,15 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 		return;
 	}
 
+
 	// Set our model matrix to identity
 	modelMatrix_.setToIdentity();
+	//modelMatrix_ = modelMatrix_ * QMatrix4x4(
+	//	-1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, -1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, -1.0f, 0.0f,
+	//	0.0f, 0.0f, 0.0f, 1.0f
+	//);
 	// Load our texture.
 	texture_.setData(QImage(textureFile));
 
@@ -125,12 +132,17 @@ void Renderable::update(const qint64 msSinceLastFrame)
 
 void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 {
+	// Handles translations, such as if the renderable isn't drawn in the center.
+	QMatrix4x4 translationMatrix;
+	translationMatrix.setToIdentity();
+	translationMatrix.translate(this->origin_);
+
 	// Create our model matrix.
 	QMatrix4x4 rotMatrix;
 	rotMatrix.setToIdentity();
 	rotMatrix.rotate(rotationAngle_, rotationAxis_);
 
-	QMatrix4x4 modelMat = modelMatrix_ * rotMatrix;
+	QMatrix4x4 modelMat = modelMatrix_ * translationMatrix * rotMatrix;
 	// Make sure our state is what we want
 	shader_.bind();
 	// Set our matrix uniforms!
@@ -161,4 +173,9 @@ void Renderable::setRotationAxis(const QVector3D& axis)
 void Renderable::setRotationSpeed(float speed)
 {
 	rotationSpeed_ = speed;
+}
+
+void Renderable::setOrigin(const QVector3D& origin)
+{
+	this->origin_ = origin;
 }

@@ -28,7 +28,14 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
   } else if (keyEvent->key() == Qt::Key_Right) {
     qDebug() << "Right Arrow Pressed";
     update();  // We call update after we handle a key press to trigger a redraw when we are ready
-  } else {
+  }
+  else if (keyEvent->key() == Qt::Key_Q)
+  {
+      qDebug() << "Quitting";
+      exit(1);
+  }
+  
+  else {
     qDebug() << "You Pressed an unsupported Key!";
   }
 }
@@ -63,15 +70,18 @@ void BasicWidget::initializeGL()
   ren->init(pos, norm, texCoord, idx, texFile);
   renderables_.push_back(ren);
 
-  QVector<QVector3D> pos2;
-  pos2 << QVector3D(-2.0, -2.0, 0.0);
-  pos2 << QVector3D(-1.0, -2.0, 0.0);
-  pos2 << QVector3D(-2.0, -1.0, 0.0);
-  pos2 << QVector3D(-1.0, -1.0, 0.0);
   Renderable* ren2 = new Renderable();
-  ren2->init(pos2, norm, texCoord, idx, texFile);
+  ren2->init(pos, norm, texCoord, idx, texFile);
   ren2->setRotationAxis(QVector3D(1.0, 0.0, 0.0));
+  ren2->setOrigin(QVector3D(-2.0, 0.0, -2.0)); // Move the origin of this renderable
   renderables_.push_back(ren2);
+
+
+  Renderable* ren3 = new Renderable();
+  ren3->init(pos, norm, texCoord, idx, texFile);
+  ren3->setRotationAxis(QVector3D(0.0, 1.0, 0.0));
+  ren3->setOrigin(QVector3D(1.0, 1.0, 0.0)); // Move the origin of this renderable
+  renderables_.push_back(ren3);
 
   glViewport(0, 0, width(), height());
   frameTimer_.start();
