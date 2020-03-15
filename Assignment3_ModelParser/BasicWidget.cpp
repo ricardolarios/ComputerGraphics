@@ -106,6 +106,9 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
     else if (keyEvent->key() == Qt::Key_W)
     {
         // I'm choosing to have the W key toggle between wireframe and non-wireframe.
+        this->is_wireframe_mode_ 
+            ? glPolygonMode(GL_FRONT_AND_BACK, GL_FILL) 
+            : glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         this->is_wireframe_mode_ = !this->is_wireframe_mode_;
         update();
     }
@@ -163,9 +166,9 @@ void BasicWidget::initialize_parser()
     // colors
     shaderProgram_.enableAttributeArray(1);
     shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GL_FLOAT), 4, 7 * sizeof(GL_FLOAT));
-    this->curr_obj_->get_nbo().bind();
+    //this->curr_obj_->get_nbo().bind();
     this->curr_obj_->get_ibo().bind();
-    this->curr_obj_->get_nibo().bind();
+    //this->curr_obj_->get_nibo().bind();
 
     // Releae the vao THEN the vbo
     curr_vao.release();
@@ -189,9 +192,7 @@ void BasicWidget::paintGL()
   shaderProgram_.bind();
   this->curr_obj_->get_vao().bind();
 
-  this->is_wireframe_mode_ 
-      ? glDrawElements(GL_LINES, curr_obj_->vertex_indices_length(), GL_UNSIGNED_INT, 0)
-      : glDrawElements(GL_TRIANGLES, curr_obj_->vertex_indices_length(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, curr_obj_->vertex_indices_length(), GL_UNSIGNED_INT, 0);
 
   this->curr_obj_->get_vao().release();
 

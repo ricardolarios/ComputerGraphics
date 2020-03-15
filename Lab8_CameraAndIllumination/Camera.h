@@ -2,6 +2,7 @@
 
 #include <QtGui/QMatrix4x4>
 #include <QtGui/QVector3D>
+#include <QtGui/qvector2d.h>
 
 class Camera
 {
@@ -10,6 +11,7 @@ protected:
 	QVector3D lookAt_;
 	QVector3D up_;
 	QMatrix4x4 projection_;
+	double current_angle_;
 
 public:
 	Camera();
@@ -30,6 +32,7 @@ public:
 	void setLookAt(const QVector3D& lookAt);
 	void translateLookAt(const QVector3D& delta);
 	QVector3D lookAt() const;
+	void rotateAroundLookAt(const double angle);
 
 	// Get our camera matrix
 	QMatrix4x4 getViewMatrix() const;

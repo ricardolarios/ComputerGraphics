@@ -37,7 +37,14 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
     camera_.setPosition(QVector3D(0.5, 0.5, -2.0));
     camera_.setLookAt(QVector3D(0.5, 0.5, 0.0));
     update();
-  } else {
+  }
+  else if (keyEvent->key() == Qt::Key_Q) 
+  {
+      qDebug() << "Quitting";
+      exit(1);
+  }
+  else
+  {
     qDebug() << "You Pressed an unsupported Key!";
   }
 }
@@ -61,9 +68,17 @@ void BasicWidget::mouseMoveEvent(QMouseEvent* mouseEvent)
   lastMouseLoc_ = mouseEvent->pos();
   if (mouseAction_ == Rotate) {
     // TODO:  Implement rotating the camera
+      // Get the distance from camera to lookat? Something with an angle, change the x and z.
+ 
+      //double angle = atan(delta.x() / (this->camera_.lookAt() - this->camera_.position()).length());
+      this->camera_.rotateAroundLookAt(delta.x() * .01f);
+      //this->camera_.translateLookAt(QVector3D(delta.x() * 0.01f, 0, 0));
+
   } else if (mouseAction_ == Zoom) {
     // TODO:  Implement zoom by moving the camera
     // Zooming is moving along the gaze direction by some amount.
+
+      //this->camera_.setPosition(this->camera_.position() - );
   } 
   update();
 }
