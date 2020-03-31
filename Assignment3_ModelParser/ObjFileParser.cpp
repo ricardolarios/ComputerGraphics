@@ -81,7 +81,7 @@ void ObjFileParser::parse_file(std::string filepath)
 			else if (first_word == "f")
 			{
 				// parse as face line
-				size_t current_index = first_word.size();
+				size_t current_index = 0;
 				trimmed_line = trimmed_line.substr(first_word.size()); // remove string so we can check string properly.
 
 				while (!trimmed_line.empty())
