@@ -5,7 +5,7 @@
 #include "helper.h"
 
 // Vertex Texture struct for compact vbo usage.
-struct VerTex
+struct VertexData
 {
 	float x;
 	float y;
@@ -36,7 +36,7 @@ std::string get_next_string_by_delimiter(const std::string& string, size_t start
   If found, sets result as the found index and returns true. Else, returns false.
   This will be a slow version. Will eventually refactor to be a faster version.
   */
-bool get_same_vertex_index(const QVector<float>& verts, const VerTex& given, size_t& result)
+bool get_same_vertex_index(const QVector<float>& verts, const VertexData& given, size_t& result)
 {
 	size_t curr_index = 0;
 
@@ -199,7 +199,7 @@ void ObjFileParser::parse_file(std::string filepath)
 
 		size_t compacted_index;
 
-		VerTex curr_compact =
+		VertexData curr_compact =
 		{
 				temp_vertices[curr_vert_idx * 3],
 				temp_vertices[curr_vert_idx * 3 + 1],

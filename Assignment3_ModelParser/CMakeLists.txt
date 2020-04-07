@@ -21,6 +21,7 @@ set(srcs
   Application.cpp
   main.cpp
   ObjFileParser.cpp
+  Renderable.cpp
 )
 
 add_executable(Assignment

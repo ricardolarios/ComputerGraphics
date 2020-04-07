@@ -20,6 +20,11 @@ BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent)
 
 BasicWidget::~BasicWidget()
 {
+    for (auto renderable : renderables_)
+    {
+        delete renderable;
+    }
+    renderables_.clear();
 }
 
 //////////////////////////////////////////////////////////////////////
