@@ -85,11 +85,5 @@ void Camera::rotateAroundLookAt(double angle)
 	double radius = QVector2D(gaze.x(), gaze.z()).length();
 
 	current_angle_ += angle;
-	//double new_x = position_.x() + sin(current_angle_);
-	//double new_z = position_.z() + (angle > 0 ? cos(current_angle_) : -cos(current_angle_));
-	qDebug() << "current radius: " << radius;
 	position_ = QVector3D(2 * cos(current_angle_), position_.y(), 2 * sin(current_angle_));
-	//qDebug() << "x: " << position_.x() << " and z: " << position_.z();
-	//qDebug() << "sin angle: " << sin(current_angle_) << " and cos angle: " << cos(current_angle_);
-	qDebug() << "X after: " << position_.x() << " and z: " << position_.z();
 }
