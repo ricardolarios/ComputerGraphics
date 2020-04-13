@@ -3,6 +3,7 @@
 #include <string>
 #include <QtOpenGL>
 #include "MtlFileParser.h"
+#include "VertexData.h"
 
 /**
 * This class is used to parse an Obj file and store the vertices, normals and faces.
@@ -17,7 +18,7 @@ class ObjFileParser
 		MtlFileParser* mtl;
 
 		// Stores vertex, texture, other information eventually.
-		QVector<float> compact_verts_;
+		QVector<VertexData> compact_verts_;
 		QVector<unsigned int> indices_;
 		unsigned int vert_size_; // size of each vertex (right now 3 vertx, 2 textures)
 
@@ -25,7 +26,7 @@ class ObjFileParser
 		QOpenGLTexture texture_;
 
 		// This is where the actual file parsing will happen, instead of in the constructor.
-		void parse_file(std::string filepath);
+		bool parse_file(std::string filepath);
 
 	public:
 		ObjFileParser();
@@ -33,10 +34,12 @@ class ObjFileParser
 		ObjFileParser(std::string filepath);
 		~ObjFileParser();
 
-		QVector<float> get_verts();
+		//QVector<float> get_verts();
 		QVector<unsigned int> get_indices();
 		unsigned int get_vertex_size();
 		QString get_texture_file();
+
+		QVector<VertexData> get_compact_vert();
 
 
 		// Determines if the two parsers are the same. For this Assignment, we'll check if the filepaths they read from are the same.

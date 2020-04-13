@@ -10,5 +10,5 @@ uniform sampler2D textureSampler;
 
 void main() {
   // Set our output fragment color to whatever we pull from our input texture (Note, change 'tex' to whatever the sampler is named)
-  fragColor = texture(textureSampler, texCoords);
+  fragColor = vec4(1.0,1.0,1.0,1.0);
 }

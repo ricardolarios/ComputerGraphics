@@ -1,6 +1,7 @@
 #pragma once
 #include "BasicWidget.h"
 #include "Sphere.h"
+#include <iostream>
 
 
 //////////////////////////////////////////////////////////////////////
@@ -84,7 +85,7 @@ void BasicWidget::mouseMoveEvent(QMouseEvent* mouseEvent)
 
           //double angle = atan(delta.x() / (this->camera_.lookAt() - this->camera_.position()).length());
           //this->camera_.rotateAroundLookAt(delta.x() * .01f);
-          //this->camera_.translateLookAt(QVector3D(delta.x() * 0.01f, 0, 0));
+          this->camera_.translateLookAt(QVector3D(delta.x() * 0.01f, 0, 0));
 
     }
     else if (mouseAction_ == Zoom)
@@ -109,8 +110,7 @@ void BasicWidget::initializeGL()
 
     qDebug() << QDir::currentPath();
 
-    root_ = new SceneNode();
-    root_->add_child(new SolarSystem());
+    root_ = new SolarSystem();
 
     Sphere s = Sphere();
     Renderable* r = new Renderable();
@@ -193,24 +193,26 @@ void BasicWidget::paintGL()
 
     glEnable(GL_DEPTH_TEST);
 
-    this->root_->update(msSinceRestart);
-    this->drawNode(this->root_);
+    //this->root_->update(msSinceRestart);
+    //this->root_->draw(world_, camera_.getViewMatrix(), camera_.getProjectionMatrix());
 
-    //for (auto renderable : renderables_)
-    //{
-    //    renderable->update(msSinceRestart);
-    //    // TODO:  Understand that the camera is now governing the view and projection matrices
-    //    renderable->draw(world_, camera_.getViewMatrix(), camera_.getProjectionMatrix());
-    //}
+    for (auto renderable : renderables_)
+    {
+        renderable->update(msSinceRestart);
+        // TODO:  Understand that the camera is now governing the view and projection matrices
+        renderable->draw(world_, camera_.getViewMatrix(), camera_.getProjectionMatrix());
+    }
     update();
 }
 
-void BasicWidget::drawNode(SceneNode* root)
-{
-    this->root_->draw(world_, camera_.getViewMatrix(), camera_.getProjectionMatrix());
-
-    for (auto i = root->getChildIteratorStart(); i != root->getChildIteratorEnd(); i++)
-    {
-        drawNode(*i);
-    }
-}
+//void BasicWidget::drawNode(SceneNode* root)
+//{
+//    root->draw(world_, camera_.getViewMatrix(), camera_.getProjectionMatrix());
+//
+//    int in = 0;
+//
+//    for (auto i = root->getChildIteratorStart(); i != root->getChildIteratorEnd(); i++)
+//    {
+//        drawNode(*i);
+//    }
+//}

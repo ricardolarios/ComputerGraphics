@@ -3,6 +3,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtOpenGL>
+#include "VertexData.h"
 
 class Renderable
 {
@@ -44,7 +45,7 @@ public:
 	// for the appropriate size.  The values can be all 0, but must be the same size as
 	// the position array!
 	virtual void init(const QVector<QVector3D>& positions, const QVector<QVector3D>& normals, const QVector<QVector2D>& texCoords, const QVector<unsigned int>& indexes, const QString& textureFile);
-	virtual void init(const QVector<float> vert_info, const QVector<unsigned int> indices, const size_t vertex_size, const QString& textureFile);
+	virtual void init(const QVector<VertexData>& vertexData, const QVector<unsigned int>& indices, const QString& textureFile);
 	virtual void update(const qint64 msSinceLastFrame);
 	virtual void draw(const QMatrix4x4& view, const QMatrix4x4& projection);
 

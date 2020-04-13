@@ -10,11 +10,10 @@ in vec3 fragPos;
 // We always define a fragment color that we output.
 out vec4 fragColor;
 
-
 // Maintain our uniforms.
-uniform sampler2D colorTex;              // our primary texture
+uniform sampler2D tex;              // our primary texture
 
 void main() {
   // Set our output fragment color to whatever we pull from our input texture (Note, change 'tex' to whatever the sampler is named)
-  fragColor = texture(colorTex, texCoords);
+  fragColor = texture(tex, texCoords);
 }

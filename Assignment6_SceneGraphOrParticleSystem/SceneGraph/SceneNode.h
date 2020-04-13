@@ -36,4 +36,6 @@ class SceneNode
         QMatrix4x4 localTransform;
         // We additionally can store the world transform
         QMatrix4x4 worldTransform;
+
+        QString texpath;
 };

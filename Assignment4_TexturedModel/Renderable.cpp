@@ -5,6 +5,8 @@
 #include "ObjFileParser.h"
 #include <iostream>
 
+/////////////////////
+
 Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 0.0, 1.0), rotationSpeed_(0.25), origin_(QVector3D(0, 0, 0))
 {
 	rotationAngle_ = 0.0;
@@ -13,10 +15,9 @@ Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer
 // Uses the given path to read data about an obj file, uses that to initialize data.
 Renderable::Renderable(std::string path) : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 0.0, 1.0), rotationSpeed_(0.25), origin_(QVector3D(0, 0, 0))
 {
-	std::cout << "before parser" << std::endl;
 	ObjFileParser* parser = new ObjFileParser(path);
-
-	this->init(parser->get_verts(), parser->get_indices(), parser->get_vertex_size(), parser->get_texture_file());
+	this->init(parser->get_compact_vert(), parser->get_indices(), parser->get_texture_file());
+	//this->init(parser->get_verts(), parser->get_indices(), parser->get_vertex_size(), parser->get_texture_file());
 	rotationAngle_ = 0.0;
 
 	delete parser;
@@ -64,18 +65,40 @@ void Renderable::createShaders()
 }
 
 // TODO: Still need to generalize this more, allow for multiple types of renderables.... maybe something other than init.
-void Renderable::init(const QVector<float> vert_info, const QVector<unsigned int> indices, const size_t vertex_size, const QString& textureFile)
+void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsigned int>& indices, const QString& textureFile)
 {
+	std::cout << "hello from renderable" << std::endl;
+	// NOTE:  We do not currently do anything with normals -- we just
+	// have it here for a later implementation!
+	// We need to make sure our sizes all work out ok.
+	//if (positions.size() != texCoords.size() ||
+	//	positions.size() != normals.size())
+	//{
+	//	qDebug() << "[Renderable]::init() -- positions size mismatch with normals/texture coordinates";
+	//	return;
+	//}
+
+
+	// Set our model matrix to identity
 	modelMatrix_.setToIdentity();
+	//modelMatrix_ = modelMatrix_ * QMatrix4x4(
+	//	-1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, -1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, -1.0f, 0.0f,
+	//	0.0f, 0.0f, 0.0f, 1.0f
+	//);
+	// Load our texture.
+	// TODO: FIX MTL PARSER THING FOR THIS.
+	texture_.setData(QImage("../../objects/house/house_diffuse.ppm"));
+	qDebug() << texture_.height() << " " << texture_.width();
 
-	// Load texture
-	texture_.setData(QImage(textureFile));
-
-	// Number of triangles to draw
+	// set our number of trianges.
 	numTris_ = indices.size() / 3;
-	std::cout << "got before buffers shit" << std::endl;
 
-	int numVBOEntries = vert_info.size();
+	// num verts (used to size our vbo)
+	int numVerts = vertexData.size();
+	vertexSize_ = 3 + 2;  // Position + texCoord
+	int numVBOEntries = numVerts * vertexSize_;
 
 	// Setup our shader.
 	createShaders();
@@ -87,14 +110,16 @@ void Renderable::init(const QVector<float> vert_info, const QVector<unsigned int
 	vbo_.create();
 	vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	vbo_.bind();
-	std::cout << "got before buffers shit" << std::endl;
-
 	// Create a temporary data array
 	float* data = new float[numVBOEntries];
-	for (int i = 0; i < numVBOEntries; ++i)
+	for (int i = 0; i < numVerts; ++i)
 	{
-		std::cout << vert_info.at(i) << std::endl;
-		data[i] = vert_info.at(i);
+		std::cout << "Vert: (" << vertexData[i].x << ", " << vertexData[i].y << ", " << vertexData[i].z << ", " << vertexData[i].s << ", " << vertexData[i].t << ")" << std::endl;
+		data[i * vertexSize_ + 0] = vertexData[i].x;
+		data[i * vertexSize_ + 1] = vertexData[i].y;
+		data[i * vertexSize_ + 2] = vertexData[i].z;
+		data[i * vertexSize_ + 3] = vertexData[i].s;
+		data[i * vertexSize_ + 4] = vertexData[i].t;
 	}
 	vbo_.allocate(data, numVBOEntries * sizeof(float));
 	delete[] data;
@@ -104,6 +129,7 @@ void Renderable::init(const QVector<float> vert_info, const QVector<unsigned int
 	ibo_.bind();
 	ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	// create a temporary array for our indexes
+	// TODO: THIS
 	unsigned int* idxAr = new unsigned int[indices.size()];
 	for (int i = 0; i < indices.size(); ++i)
 	{
@@ -112,7 +138,6 @@ void Renderable::init(const QVector<float> vert_info, const QVector<unsigned int
 	ibo_.allocate(idxAr, indices.size() * sizeof(unsigned int));
 	delete[] idxAr;
 
-	std::cout << "got past buffers shit" << std::endl;
 	// Make sure we setup our shader inputs properly
 	shader_.enableAttributeArray(0);
 	shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize_ * sizeof(float));
@@ -186,6 +211,7 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 	ibo_.bind();
 	ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	// create a temporary array for our indexes
+	// TODO: THIS
 	unsigned int* idxAr = new unsigned int[indexes.size()];
 	for (int i = 0; i < indexes.size(); ++i)
 	{

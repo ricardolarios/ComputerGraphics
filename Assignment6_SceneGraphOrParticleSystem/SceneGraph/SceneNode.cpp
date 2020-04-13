@@ -11,6 +11,7 @@ SceneNode::SceneNode()
 	// TODO: Update what the transforms are.
 	this->localTransform.setToIdentity();
 	this->worldTransform.setToIdentity();
+	this->texpath = "nothing";
 }
 
 // Constructor for a scene node. Uses the given texture file as the texture for this node.
@@ -30,6 +31,8 @@ SceneNode::SceneNode(QString textureFile)
 	// TODO: Update what the transforms are.
 	this->localTransform.setToIdentity();
 	this->worldTransform.setToIdentity();
+
+	this->texpath = textureFile;
 }
 
 // Delete all of this Node's children, and this node's renderable object.
@@ -55,7 +58,15 @@ void SceneNode::add_child(SceneNode* child)
 
 void SceneNode::draw(const QMatrix4x4& world, const QMatrix4x4& view, const QMatrix4x4& projection)
 {
-	if (this->object) this->object->draw(world, view, projection);
+	if (this->object)
+	{
+		this->object->draw(world, view, projection);
+
+		for (int i = 0; this->children.size(); i++)
+		{
+			this->children[i]->draw(world, view, projection);
+		}
+	}
 }
 
 void SceneNode::update(qint64 ms_since_last_frame)

@@ -25,6 +25,7 @@ void MtlFileParser::parse(std::string mtlfile)
 			// For now we just wanna get the path for the diffuse
 			if (first_word == "map_Kd")
 			{
+				std::cout << "WHAT THE FUCK" << std::endl;
 				// TODO: I have no idea how to get paths properly with this. Maybe have the path from the std input stick through.
 				size_t end = trimmed_line.find_first_of(" ");
 				std::string path = (end == std::string::npos) ? trimmed_line : trimmed_line.substr(0, end);
@@ -38,10 +39,12 @@ void MtlFileParser::parse(std::string mtlfile)
 
 MtlFileParser::MtlFileParser(std::string path)
 {
+	this->diffuse_path = "";
 	this->parse(path);
 }
 
 QString MtlFileParser::get_diffuse_ppm()
 {
-	return QString::fromStdString(this->diffuse_path);
+	std::cout << "hi?";
+	return "";
 }

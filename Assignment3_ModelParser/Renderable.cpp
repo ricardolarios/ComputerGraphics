@@ -70,9 +70,7 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 
 	// num verts (used to size our vbo)
 	int numVerts = positions.size();
-	vertexSize_ = 3 
-		//+ 2
-		;  // Position + texCoord
+	vertexSize_ = 3 + 2;  // Position + texCoord
 	int numVBOEntries = numVerts * vertexSize_;
 
 	// Setup our shader.

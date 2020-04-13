@@ -146,7 +146,7 @@ void Renderable::draw(const QMatrix4x4& world, const QMatrix4x4& view, const QMa
 	// Create our model matrix.
 	QMatrix4x4 rotMatrix;
 	rotMatrix.setToIdentity();
-	rotMatrix.rotate(rotationAngle_, rotationAxis_);
+	//rotMatrix.rotate(rotationAngle_, rotationAxis_);
 
 	// incorporate a real world transform if want it.
 	QMatrix4x4 modelMat = modelMatrix_ * rotMatrix;

@@ -6,17 +6,17 @@
 // it doesn't seem to create them properly, and can't parse it at all. Don't know why!
 // Was originally planning on storing a map of these parsers and setting the curr_key to different ones based
 // on key clicks (i.e. 1 would go to bunny, 2 to monkey, etc.). 
-ObjFileParser* house = new ObjFileParser("../objects/house/house_obj.obj");
-ObjFileParser* bunny = new ObjFileParser("../objects/bunny.obj");
-ObjFileParser* monkey = new ObjFileParser("../objects/monkey.obj");
-ObjFileParser* cube = new ObjFileParser("../objects/cube.obj");
+//ObjFileParser* house = new ObjFileParser("../objects/house/house_obj.obj");
+//ObjFileParser* bunny = new ObjFileParser("../objects/bunny.obj");
+//ObjFileParser* monkey = new ObjFileParser("../objects/monkey.obj");
+//ObjFileParser* cube = new ObjFileParser("../objects/cube.obj");
 
 //////////////////////////////////////////////////////////////////////
 // Publics
 BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), logger_(this)
 {
     this->is_wireframe_mode_ = false;
-    this->curr_obj_ = house;
+    //this->curr_obj_ = house;
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -141,7 +141,7 @@ void BasicWidget::initializeGL()
     makeCurrent();
     initializeOpenGLFunctions();
 
-    Renderable* ren = new Renderable("../objects/house/house_obj.obj");
+    Renderable* ren = new Renderable("../../objects/house/house_obj.obj");
 
     this->renderables_.push_back(ren);
     //this->initialize_parser();
@@ -185,11 +185,10 @@ void BasicWidget::paintGL()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // TODO:  render.
-
   for (auto renderable : renderables_)
   {
       renderable->draw(view_, projection_);
   }
 
-  shaderProgram_.release();
+  update();
 }

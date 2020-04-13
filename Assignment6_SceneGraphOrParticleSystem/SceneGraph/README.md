@@ -4,7 +4,7 @@
 
 *TODO*: Please edit the following information in your assignment
 
-* Name and partners name(At most 1 partner for this Assignment): 
+* Name and partners name(At most 1 partner for this Assignment):  Rikki Larios
 * How many hours did it take you to complete this Assignment? 
 * Did you collaborate or share ideas with any other students/TAs/Professors? 
 * Did you use any external resources? 
@@ -12,6 +12,8 @@
   * (tbd if any)
   * (tbd if any)
 * (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
+I think the whole assignment is interesting but please have mercy on me since it isn't rendering anything (it's 4/11 right now, so we'll see if I remember to change this note).
+I'm trying to graduate.... I just don't know what is wrong and why it isn't drawing...
   
 ## Description
 
@@ -102,7 +104,10 @@ the final position of an object in world space? Note: There is a handy
 [tutorial](./media/SceneGraphs.pdf) in the repository including more
 information on scenegraphs which may help you answer.
   
-**Answer here**: *Your answer here*
+**Answer here**: Since we are storing everything within a tree, and everything is connected to one another in our scene, it's both handy and easy to use these transforms in this way.
+Since we store a local and world transform, at any point in our traversal, we only have to check the parent nodes world transformation, and we know our own local transformation. This will
+allow us ease of use when wanting to move certain parts of the scene, since we can just change the local transform there, and in theory it should handle how to execute that wherever it is in the world. 
+It should be significantly quicker than traversing the tree for an object, because in a scene with thousands or millions of objects in the tree, it will take significantly longer to determine the position, as opposed to simply going to the object you want, and using its stored local transform and the world transform of the parent node. 
   
 ## How to run your program
 
