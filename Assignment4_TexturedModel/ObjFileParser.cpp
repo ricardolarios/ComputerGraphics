@@ -454,6 +454,10 @@ bool ObjFileParser::parse_file(std::string path)
 
 	//std::cout << "VERTEX POSITION SIZE: " << positions.size() << std::endl;
 
+	for (int i = 0; i < positions.size(); i++)
+	{
+		//std::cout << "Positions: (" << positions[i].x() << ", " << positions[i].y() << ", " << positions[i].z() << ")" << std::endl;
+	}
 
 	// Abstract out to handle normals and stuff.
 	QVector<VertexData> compact_verts;

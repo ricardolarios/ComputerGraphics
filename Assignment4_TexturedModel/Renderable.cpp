@@ -100,6 +100,7 @@ void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsig
 	vertexSize_ = 3 + 2;  // Position + texCoord
 	int numVBOEntries = numVerts * vertexSize_;
 
+	//std::cout << "VERTEXDATA SIZE: " << vertexData.size() << std::endl;
 	// Setup our shader.
 	createShaders();
 
@@ -114,7 +115,7 @@ void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsig
 	float* data = new float[numVBOEntries];
 	for (int i = 0; i < numVerts; ++i)
 	{
-		std::cout << "Vert: (" << vertexData[i].x << ", " << vertexData[i].y << ", " << vertexData[i].z << ", " << vertexData[i].s << ", " << vertexData[i].t << ")" << std::endl;
+		//std::cout << "Vert: (" << vertexData[i].x << ", " << vertexData[i].y << ", " << vertexData[i].z << ", " << vertexData[i].s << ", " << vertexData[i].t << ")" << std::endl;
 		data[i * vertexSize_ + 0] = vertexData[i].x;
 		data[i * vertexSize_ + 1] = vertexData[i].y;
 		data[i * vertexSize_ + 2] = vertexData[i].z;
@@ -268,7 +269,7 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 
 	vao_.bind();
 	texture_.bind();
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, this->numTris_, GL_UNSIGNED_INT, 0);
 	texture_.release();
 	vao_.release();
 	shader_.release();
