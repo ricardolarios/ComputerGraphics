@@ -55,5 +55,4 @@ public:
 	void setOrigin(const QVector3D& origin); // Set origin, initially (0,0,0)
 
 private:
-
 };

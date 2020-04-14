@@ -7,13 +7,15 @@
 *TODO*: Please edit the following information in your assignment
 
 * Name and partners name(At most 1 partner for this Assignment): 
-* How many hours did it take you to complete this Assignment? 
-* Did you collaborate or share ideas with any other students/TAs/Professors? 
+* How many hours did it take you to complete this Assignment? Many. Many many hours. At l e a s t like 72 hours.
+* Did you collaborate or share ideas with any other students/TAs/Professors? Vaguely talked to professor about it
 * Did you use any external resources? 
   * (tbd if any)
   * (tbd if any)
   * (tbd if any)
 * (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
+
+NOTE: When it asks for a file path, since I'm in Visual Studio the path that I've been using is `../../objects/house/house_obj.obj`.
   
 ## Description
 

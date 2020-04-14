@@ -5,7 +5,7 @@
 class MtlFileParser
 {
 	private:
-		std::string diffuse_path;
+		std::string diffuse_ppm;
 		void parse(std::string mtlfile);
 
 	public:

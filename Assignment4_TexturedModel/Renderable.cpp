@@ -4,6 +4,7 @@
 #include <QtOpenGL>
 #include "ObjFileParser.h"
 #include <iostream>
+#include <cassert>
 
 /////////////////////
 
@@ -64,21 +65,10 @@ void Renderable::createShaders()
 	}
 }
 
-// TODO: Still need to generalize this more, allow for multiple types of renderables.... maybe something other than init.
+// This takes a vector of VertexData, a vector of indices and a texture file. Used because my ObjFileParser currently compacts the vertices and indices in there.
+// TODO: Generalize this? Try to update ObjFileParser to not do that on its own? Not sure.
 void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsigned int>& indices, const QString& textureFile)
 {
-	std::cout << "hello from renderable" << std::endl;
-	// NOTE:  We do not currently do anything with normals -- we just
-	// have it here for a later implementation!
-	// We need to make sure our sizes all work out ok.
-	//if (positions.size() != texCoords.size() ||
-	//	positions.size() != normals.size())
-	//{
-	//	qDebug() << "[Renderable]::init() -- positions size mismatch with normals/texture coordinates";
-	//	return;
-	//}
-
-
 	// Set our model matrix to identity
 	modelMatrix_.setToIdentity();
 	//modelMatrix_ = modelMatrix_ * QMatrix4x4(
@@ -87,20 +77,18 @@ void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsig
 	//	0.0f, 0.0f, -1.0f, 0.0f,
 	//	0.0f, 0.0f, 0.0f, 1.0f
 	//);
-	// Load our texture.
-	// TODO: FIX MTL PARSER THING FOR THIS.
-	texture_.setData(QImage("../../objects/house/house_diffuse.ppm"));
-	qDebug() << texture_.height() << " " << texture_.width();
 
-	// set our number of trianges.
+	// Load our texture.
+	texture_.setData(QImage(textureFile));
+
+	// set our number of trianges. Number of indices / 3 because each triangle has 3 indices.
 	numTris_ = indices.size() / 3;
 
 	// num verts (used to size our vbo)
 	int numVerts = vertexData.size();
-	vertexSize_ = 3 + 2;  // Position + texCoord
+	vertexSize_ = 3 + 2;  // Position + texCoord TODO: generalize?
 	int numVBOEntries = numVerts * vertexSize_;
 
-	//std::cout << "VERTEXDATA SIZE: " << vertexData.size() << std::endl;
 	// Setup our shader.
 	createShaders();
 

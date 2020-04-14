@@ -140,8 +140,11 @@ void BasicWidget::initializeGL()
 {
     makeCurrent();
     initializeOpenGLFunctions();
-
-    Renderable* ren = new Renderable("../../objects/house/house_obj.obj");
+    // Get path from std::in
+    std::cout << "Please input the path to your obj file." << std::endl;
+    std::string path;
+    std::cin >> path;
+    Renderable* ren = new Renderable(path);
 
     this->renderables_.push_back(ren);
     //this->initialize_parser();

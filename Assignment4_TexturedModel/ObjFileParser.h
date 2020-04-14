@@ -24,6 +24,9 @@ class ObjFileParser
 
 		// For now, we have only one texture per object
 		QOpenGLTexture texture_;
+		
+		// The path of the directory where the used textures/obj files/etc are. For example, if the given path was `../../objects/house/house_obj.obj`, this would be `../../objects/house/`
+		QString directory_path_;
 
 		// This is where the actual file parsing will happen, instead of in the constructor.
 		bool parse_file(std::string filepath);
