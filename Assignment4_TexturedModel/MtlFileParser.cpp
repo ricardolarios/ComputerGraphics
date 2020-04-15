@@ -20,8 +20,6 @@ void MtlFileParser::parse(std::string mtlfile)
 			// For now we just wanna get the path for the diffuse
 			if (first_token == "map_Kd")
 			{
-				std::cout << "hi" << std::endl;
-				// TODO: I have no idea how to get paths properly with this. Maybe have the path from the std input stick through.
 				std::string path = Helper::get_all_but_first_token(cur_line);
 				this->diffuse_ppm = path;
 			}

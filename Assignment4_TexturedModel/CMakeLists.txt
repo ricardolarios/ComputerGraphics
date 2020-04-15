@@ -19,10 +19,11 @@ include_directories(
 set(srcs
   BasicWidget.cpp
   Application.cpp
+  Camera.cpp
   main.cpp
+  MtlFileParser.cpp
   ObjFileParser.cpp
   ppm.cpp
-  MtlFileParser.cpp
   Renderable.cpp
 )
 

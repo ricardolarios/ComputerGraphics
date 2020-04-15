@@ -8,13 +8,13 @@
 
 /////////////////////
 
-Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 0.0, 1.0), rotationSpeed_(0.25), origin_(QVector3D(0, 0, 0))
+Renderable::Renderable() : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25), origin_(QVector3D(0, 0, 0))
 {
 	rotationAngle_ = 0.0;
 }
 
 // Uses the given path to read data about an obj file, uses that to initialize data.
-Renderable::Renderable(std::string path) : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 0.0, 1.0), rotationSpeed_(0.25), origin_(QVector3D(0, 0, 0))
+Renderable::Renderable(std::string path) : vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), texture_(QOpenGLTexture::Target2D), numTris_(0), vertexSize_(0), rotationAxis_(0.0, 1.0, 0.0), rotationSpeed_(0.25), origin_(QVector3D(0, 0, 0))
 {
 	ObjFileParser* parser = new ObjFileParser(path);
 	this->init(parser->get_compact_vert(), parser->get_indices(), parser->get_texture_file());
@@ -79,7 +79,10 @@ void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsig
 	//);
 
 	// Load our texture.
-	texture_.setData(QImage(textureFile));
+	// Not sure how to check if the texture is mirrored so for right now, just check if its the house!
+	bool is_house = textureFile.toStdString().substr(0, 5) == "house";
+	QImage image = is_house ? QImage(textureFile).mirrored(true) : QImage(textureFile);
+	texture_.setData(image);
 
 	// set our number of trianges. Number of indices / 3 because each triangle has 3 indices.
 	numTris_ = indices.size() / 3;
@@ -221,11 +224,10 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 	ibo_.release();
 }
 
-void Renderable::update(const qint64 msSinceLastFrame)
+void Renderable::update(const double delta)
 {
 	// For this lab, we want our polygon to rotate. 
-	float sec = msSinceLastFrame / 1000.0f;
-	float anglePart = sec * rotationSpeed_ * 360.f;
+	float anglePart = delta * .01f * rotationSpeed_ * 360.f;
 	rotationAngle_ += anglePart;
 	while (rotationAngle_ >= 360.0)
 	{
@@ -233,7 +235,7 @@ void Renderable::update(const qint64 msSinceLastFrame)
 	}
 }
 
-void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
+void Renderable::draw(const QMatrix4x4& world, const QMatrix4x4& view, const QMatrix4x4& projection)
 {
 	// Handles translations, such as if the renderable isn't drawn in the center.
 	QMatrix4x4 translationMatrix;
@@ -246,6 +248,8 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 	rotMatrix.rotate(rotationAngle_, rotationAxis_);
 
 	QMatrix4x4 modelMat = modelMatrix_ * translationMatrix * rotMatrix;
+
+	modelMat = world * modelMat;
 	// Make sure our state is what we want
 	shader_.bind();
 	// Set our matrix uniforms!
@@ -281,4 +285,9 @@ void Renderable::setRotationSpeed(float speed)
 void Renderable::setOrigin(const QVector3D& origin)
 {
 	this->origin_ = origin;
+}
+
+void Renderable::setRotationAngle(const float angle)
+{
+	this->rotationAngle_ = angle;
 }
