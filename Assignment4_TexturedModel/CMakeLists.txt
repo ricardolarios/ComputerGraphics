@@ -23,7 +23,6 @@ set(srcs
   main.cpp
   MtlFileParser.cpp
   ObjFileParser.cpp
-  ppm.cpp
   Renderable.cpp
 )
 
