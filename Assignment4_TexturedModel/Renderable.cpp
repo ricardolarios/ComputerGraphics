@@ -79,9 +79,9 @@ void Renderable::init(const QVector<VertexData>& vertexData, const QVector<unsig
 	//);
 
 	// Load our texture.
-	// Not sure how to check if the texture is mirrored so for right now, just check if its the house!
-	bool is_house = textureFile.toStdString().substr(0, 5) == "house";
-	QImage image = is_house ? QImage(textureFile).mirrored(true) : QImage(textureFile);
+	// Not sure how to check if the texture is mirrored so for right now, just check if its the house! (or in this case, has '/house/' in the path)
+	bool is_house = textureFile.toStdString().find("/house/");
+	QImage image = is_house == std::string::npos ? QImage(textureFile) : QImage(textureFile).mirrored(true);
 	texture_.setData(image);
 
 	// set our number of trianges. Number of indices / 3 because each triangle has 3 indices.
@@ -261,7 +261,8 @@ void Renderable::draw(const QMatrix4x4& world, const QMatrix4x4& view, const QMa
 
 	vao_.bind();
 	texture_.bind();
-	glDrawElements(GL_TRIANGLES, this->numTris_, GL_UNSIGNED_INT, 0);
+	// Not sure why, my numTris_ SHOULD BE RIGHT, but it wasn't drawing enough triangles. To be fair, it STILL isn't, but when i multiply by 3 it definitely draws more. So. Here we are.
+	glDrawElements(GL_TRIANGLES, this->numTris_ * 3, GL_UNSIGNED_INT, 0);
 	texture_.release();
 	vao_.release();
 	shader_.release();
